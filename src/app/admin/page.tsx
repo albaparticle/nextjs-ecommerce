@@ -8,12 +8,14 @@ export default async function AdminDashboard() {
         getUserData(),
         getProductData()
     ])
-                
-    return (<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <DashboardCard title="Sales" subtitle={`${formatNumber(salesData.numberOfSales)} Orders`} body={formatCurrency(salesData.amount)} />
-        <DashboardCard title="Customers" subtitle={`${formatCurrency(userData.averageValuePerUser)} Average Value`} body={`${formatNumber(userData.userCount)} Users`} />
-        <DashboardCard title="Active Products" subtitle={`${formatNumber(productData.inactiveProducts)} Inactive`} body={formatNumber(productData.activeProducts)} />
-    </div>)
+
+    return (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <DashboardCard title="Sales" subtitle={`${formatNumber(salesData.numberOfSales)} Orders`} body={formatCurrency(salesData.amount)} />
+            <DashboardCard title="Customers" subtitle={`${formatCurrency(userData.averageValuePerUser)} Average Value`} body={`${formatNumber(userData.userCount)} Users`} />
+            <DashboardCard title="Active Products" subtitle={`${formatNumber(productData.inactiveProducts)} Inactive`} body={formatNumber(productData.activeProducts)} />
+        </div>
+    )
 }
 
 type DashboardCardProps = {
@@ -22,13 +24,15 @@ type DashboardCardProps = {
     body: string
 }
 function DashboardCard({ title, subtitle, body }: DashboardCardProps) {
-    return <Card>
-        <CardHeader>
-            <CardTitle>{title}</CardTitle>
-            <CardDescription>{subtitle}</CardDescription>
-        </CardHeader>
-        <CardContent><p>{body}</p></CardContent>
-    </Card>;
+    return (
+        <Card>
+            <CardHeader>
+                <CardTitle>{title}</CardTitle>
+                <CardDescription>{subtitle}</CardDescription>
+            </CardHeader>
+            <CardContent><p>{body}</p></CardContent>
+        </Card>
+    );
 }
 
 async function getSalesData() {
@@ -59,8 +63,8 @@ async function getUserData() {
 
 async function getProductData() {
     const [activeProducts, inactiveProducts] = await Promise.all([
-        db.product.count({ where: { isAvailableForPurchase: true }}),
-        db.product.count({ where: { isAvailableForPurchase: false }})
+        db.product.count({ where: { isAvailableForPurchase: true } }),
+        db.product.count({ where: { isAvailableForPurchase: false } })
     ])
 
     return {
