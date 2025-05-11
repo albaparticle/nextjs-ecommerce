@@ -16,7 +16,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
     if (product == null) return notFound();
 
     const {size} = await fs.stat(product.filePath);
-    const file = await fs.readFile(product.filePath);
+    const file = new Uint8Array(await fs.readFile(product.filePath));
     const extension = product.filePath.split(".").pop();
 
     return new NextResponse(file, {headers: {
