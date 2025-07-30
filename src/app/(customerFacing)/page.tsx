@@ -5,8 +5,9 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { ProductCard, ProductCardSkeleton } from "@/components/ProductCard";
 import { Suspense } from "react";
+import { cache } from "@/lib/caches";
 
-function getMostPopularProducts() {
+const getMostPopularProducts = cache( () => {
     return db.product.findMany({
         where: {
             isAvailableForPurchase: true
@@ -17,10 +18,10 @@ function getMostPopularProducts() {
             }
         },
         take: 6
-    })
-}
+    })    
+}, ["/", "getMostPopularProducts"], { revalidate: 60 * 60 * 24 });
 
-function getNewestProducts() {
+const getNewestProducts = cache( () => {
     return db.product.findMany({
         where: {
             isAvailableForPurchase: true
@@ -30,7 +31,7 @@ function getNewestProducts() {
         },
         take: 6
     })
-}
+}, ["/", "getNewestProducts"]);
 
 export default function HomePage() {
     return <main className="space-y-12">
